@@ -118,8 +118,16 @@ class GameController extends Controller
             return response()->json(['message' => 'Game not found'], 404);
         }
 
+        $auth = auth();
+        $user = $auth->user();
+
         // Only allow Admins OR the user who created the game to delete it
-        if (Auth::user()->role !== 'admin' && $game->user_id !== Auth::id()) {
+        // if (Auth::user()->role !== 'admin' && $game->user_id !== Auth::id()) {
+        //     return response()->json(['message' => 'Unauthorized'], 403);
+        // }
+
+        // Only Admins or the creator of the game can delete it
+        if ($user->role !== 'admin' && $user->id !== $game->user_id) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 

@@ -1,66 +1,154 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Video Game Management API
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+This is a Laravel 10.2 API for managing video games, featuring authentication, user roles, filtering, sorting, and reviews.
 
-## About Laravel
+## Features
+- User authentication (register, login, logout) using Laravel Sanctum
+- Role-based access (Admin & Regular User)
+- Game management (CRUD operations)
+- Filtering & sorting (by genre & release date)
+- Game reviews & ratings
+- API authentication with Laravel Sanctum
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Requirements
+- PHP 8.1
+- Composer 2.6
+- Laravel 10.2
+- SQLite, MySQL, or PostgreSQL
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Installation
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+1. **Clone the Repository**
+   ```sh
+   git clone https://github.com/StefanosDoul/videogame-api.git
+   cd videogame-api
+   ```
 
-## Learning Laravel
+2. **Install Dependencies**
+   ```sh
+   composer install
+   ```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+3. **Set Up Environment**
+   ```sh
+   cp .env.example .env
+   php artisan key:generate
+   ```
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+4. **Configure Database**  
+   Edit `.env` and set up your database:
+   ```
+   DB_CONNECTION=sqlite
+   DB_DATABASE=C:\<your_path>\videogame-api.sqlite
+   ```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+5. **Run Migrations**
+   ```sh
+   php artisan migrate
+   ```
 
-## Laravel Sponsors
+6. **Seed Admin User (Optional)**
+   ```sh
+   php artisan tinker
+   ```
+   Then run:
+   ```php
+   $admin = App\Models\User::create([
+       'name' => 'Admin User',
+       'email' => 'admin@example.com',
+       'password' => Illuminate\Support\Facades\Hash::make('password'),
+       'role' => 'admin'
+   ]);
+   ```
+   Exit with `exit`.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+7. **Start the Server**
+   ```sh
+   php artisan serve
+   ```
 
-### Premium Partners
+## API Endpoints
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+### Authentication
+| Method | Endpoint        | Description |
+|--------|-----------------|-------------|
+| POST   | `/api/register` | Register a new user |
+| POST   | `/api/login`    | Log in and get token |
+| POST   | `/api/logout`   | Log out (requires token) |
 
-## Contributing
+### Games
+| Method | Endpoint          | Description |
+|--------|-------------------|-------------|
+| GET    | `/api/games`      | List games (with filters) |
+| POST   | `/api/games`      | Create a new game |
+| GET    | `/api/games/{id}` | Get game details |
+| PUT    | `/api/games/{id}` | Update a game |
+| DELETE | `/api/games/{id}` | Delete a game (Admin or owner only) |
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Reviews
+| Method | Endpoint                           | Description |
+|--------|------------------------------------|-------------|
+| POST   | `/api/games/{gameId}/reviews`      | Add a review |
+| GET    | `/api/games/{gameId}/reviews`      | List game reviews |
+| PUT    | `/api/games/{gameId}/reviews/{id}` | Edit a review |
+| DELETE | `/api/games/{gameId}/reviews/{id}` | Delete a review |
 
-## Code of Conduct
+## Authentication
+Include the `Authorization` header in all protected API requests:
+```
+Authorization: Bearer YOUR_ACCESS_TOKEN
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## Testing with Postman
 
-## Security Vulnerabilities
+1. **Import Postman Collection**  
+   - Download the Postman Collection from **`postman_collection.json`** (see next step).
+   - Open Postman → Click **Import** → Select `postman_collection.json`.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+2. **Set Up Environment Variables**  
+   - Create a variable **`base_url`** and set it to:
+     ```
+     http://127.0.0.1:8000/api
+     ```
+   - Add **`Authorization`** token after login.
 
-## License
+## Creating the Postman Collection
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+1. Open **Postman** and create a **new collection** called:
+   ```
+   Video Game API
+   ```
+
+2. **Add requests**:
+   - **Auth Folder:**
+     - `POST /api/register`
+     - `POST /api/login`
+     - `POST /api/logout`
+   - **Games Folder:**
+     - `GET /api/games`
+     - `POST /api/games`
+     - `GET /api/games/{id}`
+     - `PUT /api/games/{id}`
+     - `DELETE /api/games/{id}`
+   - **Reviews Folder:**
+     - `POST /api/games/{gameId}/reviews`
+     - `GET /api/games/{gameId}/reviews`
+     - `PUT /api/reviews/{id}`
+     - `DELETE /api/reviews/{id}`
+
+3. **Save the collection** and export it:  
+   - Click **... (More Actions) → Export**  
+   - Select **Collection v2.1**  
+   - Save as `postman_collection.json`
+
+4. **Include the file in your Git repo:**
+   ```sh
+   mv postman_collection.json public/
+   git add public/postman_collection.json
+   git commit -m "Added Postman Collection"
+   git push origin main
+   ```
+
+---
+### **My Laravel API is Complete!**
+
