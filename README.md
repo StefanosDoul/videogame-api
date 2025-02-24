@@ -103,7 +103,7 @@ Authorization: Bearer YOUR_ACCESS_TOKEN
 
 1. **Import Postman Collection**  
    - Download the Postman Collection from **`postman_collection.json`** (see next step).
-   - Open Postman → Click **Import** → Select `postman_collection.json`.
+   - Open Postman → Click **Import** → Select `Video Game API.postman_collection.json`.
 
 2. **Set Up Environment Variables**  
    - Create a variable **`base_url`** and set it to:
